@@ -23,8 +23,8 @@ void loop() {
   int ch2 = pulseIn(CH2, HIGH, 25000);  // Ось Y (вперед/назад)
 
   // Преобразуем сигнал в диапазон -255..255
-  int speedY = map(ch2, 1075, 1899, -255, 255); // Движение вперед/назад
-  int speedX = map(ch1, 1075, 1899, -255, 255); // Поворот влево/вправо
+  int speedY = map(ch2, 1085, 1900, -255, 255); // Движение вперед/назад
+  int speedX = map(ch1, 1085, 1900, -255, 255); // Поворот влево/вправо
 
   // Ограничиваем значения диапазоном -255..255
   speedY = constrain(speedY, -255, 255);
@@ -44,26 +44,30 @@ void loop() {
   //Serial.print(" | speedY: ");
   //Serial.println(speedY);
 
-  // Управление движением
+ // Управление движением
   if (speedY != 0) {
-    // Движение вперед/назад
     if (speedY > 0) {
-      controlSteering(LOW, HIGH, HIGH, LOW, abs(speedY)); // Назад
+      //Serial.print(" | speedY: ");
+      //Serial.println(speedY);
+      controlSteering(LOW, HIGH, HIGH, LOW, abs(speedY)); // Движение назад
     } else {
-      controlSteering(HIGH, LOW, LOW, HIGH, abs(speedY)); // Вперед
+      //Serial.print(" | speedY: ");
+      //Serial.println(speedY);
+      controlSteering(HIGH, LOW, LOW, HIGH, abs(speedY)); // Движение вперед
     }
   } else if (speedX != 0) {
-    // Поворот влево/вправо
     if (speedX > 0) {
-      controlSteering(HIGH, LOW, HIGH, LOW, abs(speedX)); // Вправо
+      //Serial.print(" | speedX: ");
+      //Serial.println(speedX);
+      controlSteering(HIGH, LOW, HIGH, LOW, abs(speedX)); // Поворот вправо
     } else {
-      controlSteering(LOW, HIGH, LOW, HIGH, abs(speedX)); // Влево
+      //Serial.print(" | speedX: ");
+      //Serial.println(speedX);
+      controlSteering(LOW, HIGH, LOW, HIGH, abs(speedX)); // Поворот влево
     }
   } else {
-    // Стоим на месте
-    controlSteering(LOW, LOW, LOW, LOW, 0);
+    controlSteering(LOW, LOW, LOW, LOW, 0); // Стоим на месте
   }
-
   delay(20);
 }
 

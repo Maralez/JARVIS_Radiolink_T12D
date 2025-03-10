@@ -1,10 +1,13 @@
 #define CH1 4  // Поворот (лево/право)
 #define CH2 5  // Движение (вперед/назад)
 
+#define BUZZER 3 // Buzzer
+
 #define IN1 6  // Левый двигатель (направление 1)
 #define IN2 7  // Левый двигатель (направление 2)
 #define IN3 8  // Правый двигатель (направление 1)
 #define IN4 9  // Правый двигатель (направление 2)
+
 #define ENA 10 // ШИМ для левого двигателя
 #define ENB 11 // ШИМ для правого двигателя
 
@@ -16,6 +19,7 @@ void setup() {
   pinMode(ENA, OUTPUT);
   pinMode(ENB, OUTPUT);
   //Serial.begin(9600);  // Для отладки
+  startupSound();
 }
 
 void loop() {
@@ -44,38 +48,53 @@ void loop() {
   //Serial.print(" | speedY: ");
   //Serial.println(speedY);
 
- // Управление движением
-  if (speedY != 0) {
-    if (speedY > 0) {
-      //Serial.print(" | speedY: ");
-      //Serial.println(speedY);
-      controlSteering(LOW, HIGH, HIGH, LOW, abs(speedY)); // Движение назад
+   if (speedY < 0) {
+    if (speedX < 0) {
+      //Serial.println("Движение вперед с поворотом вправо");
+      controlSteering(LOW, HIGH, LOW, HIGH, abs(speedX), abs(speedY)); // Движение вперед с поворотом вправо
+    } else if (speedX > 0) {
+      //Serial.println("Движение вперед с поворотом влево");
+      controlSteering(HIGH, LOW, HIGH, LOW, abs(speedY), abs(speedX)); // Движение вперед с поворотом влево
     } else {
-      //Serial.print(" | speedY: ");
-      //Serial.println(speedY);
-      controlSteering(HIGH, LOW, LOW, HIGH, abs(speedY)); // Движение вперед
+      //Serial.println("Движение вперед");
+      controlSteering(HIGH, LOW, LOW, HIGH, abs(speedY), abs(speedY)); // Движение вперед
     }
-  } else if (speedX != 0) {
-    if (speedX > 0) {
-      //Serial.print(" | speedX: ");
-      //Serial.println(speedX);
-      controlSteering(HIGH, LOW, HIGH, LOW, abs(speedX)); // Поворот вправо
+  } else if (speedY > 0) {
+    if (speedX < 0) {
+      Serial.println("Движение назад c поворотом вправо");
+      controlSteering(HIGH, LOW, HIGH, LOW, abs(speedX), abs(speedY)); // Движение назад с поворотом вправо
+    } else if (speedX > 0) {
+      Serial.println("Движение назад c поворотом влево");
+      controlSteering(LOW, HIGH, LOW, HIGH, abs(speedY), abs(speedX)); // Движение назад с поворотом влево
     } else {
-      //Serial.print(" | speedX: ");
-      //Serial.println(speedX);
-      controlSteering(LOW, HIGH, LOW, HIGH, abs(speedX)); // Поворот влево
+      Serial.println("Движение назад");
+      controlSteering(LOW, HIGH, HIGH, LOW, abs(speedY), abs(speedY));
     }
   } else {
-    controlSteering(LOW, LOW, LOW, LOW, 0); // Стоим на месте
+    Serial.println("Стоим на месте");
+    controlSteering(LOW, LOW, LOW, LOW, 0, 0); // Стоим на месте
   }
   delay(20);
 }
 
-void controlSteering(int in1, int in2, int in3, int in4, int speed) {
+void controlSteering(int in1, int in2, int in3, int in4, int speedLeft, int speedRigth) {
   digitalWrite(IN1, in1);
   digitalWrite(IN2, in2);
   digitalWrite(IN3, in3);
   digitalWrite(IN4, in4);
-  analogWrite(ENA, speed); // Скорость левого двигателя
-  analogWrite(ENB, speed); // Скорость правого двигателя
+  analogWrite(ENA, speedLeft); // Скорость левого двигателя
+  analogWrite(ENB, speedRigth); // Скорость правого двигателя
+}
+
+void startupSound() {
+  // Имитация звука запуска дрона
+  tone(BUZZER, 400, 100);  // Низкая нота
+  delay(120);
+  tone(BUZZER, 600, 100);  // Чуть выше
+  delay(120);
+  tone(BUZZER, 800, 100);  // Еще выше
+  delay(120);
+  tone(BUZZER, 1000, 150); // Пик!
+  delay(200);
+  noTone(BUZZER); // Выключаем звук
 }

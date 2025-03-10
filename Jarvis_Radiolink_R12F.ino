@@ -61,17 +61,23 @@ void loop() {
     }
   } else if (speedY > 0) {
     if (speedX < 0) {
-      Serial.println("Движение назад c поворотом вправо");
+      //Serial.println("Движение назад c поворотом вправо");
       controlSteering(HIGH, LOW, HIGH, LOW, abs(speedX), abs(speedY)); // Движение назад с поворотом вправо
     } else if (speedX > 0) {
-      Serial.println("Движение назад c поворотом влево");
+      //Serial.println("Движение назад c поворотом влево");
       controlSteering(LOW, HIGH, LOW, HIGH, abs(speedY), abs(speedX)); // Движение назад с поворотом влево
     } else {
-      Serial.println("Движение назад");
+      //Serial.println("Движение назад");
       controlSteering(LOW, HIGH, HIGH, LOW, abs(speedY), abs(speedY));
     }
+  } else if (speedX > 0) {
+    //Serial.println("Вращение на лево");
+    controlSteering(HIGH, LOW, HIGH, LOW, abs(speedX), abs(speedX)); // Вращение на лево
+  } else if (speedX < 0) {
+    //Serial.println("Вращение на право");
+    controlSteering(LOW, HIGH, LOW, HIGH, abs(speedX), abs(speedX)); // Вращение на право
   } else {
-    Serial.println("Стоим на месте");
+    //Serial.println("Стоим на месте");
     controlSteering(LOW, LOW, LOW, LOW, 0, 0); // Стоим на месте
   }
   delay(20);
